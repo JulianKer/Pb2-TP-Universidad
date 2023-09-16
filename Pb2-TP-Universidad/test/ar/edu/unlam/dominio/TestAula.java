@@ -8,9 +8,9 @@ public class TestAula {
 
 	@Test
 	public void queSeCreeUnAula() {
+		Integer numeroAula = 406;
 		Integer cantidadDeAlumnos = 30;
-		
-		Aula nuevaAula = new Aula(cantidadDeAlumnos);
+		Aula nuevaAula = new Aula(numeroAula, cantidadDeAlumnos);
 		
 		assertNotNull(nuevaAula);
 	}

@@ -4,10 +4,12 @@ public class Aula {
 	
 	private Integer id = 0;
 	private Integer cantMaxDeAlumnos;
+	private Integer numeroAula;
  
-	public Aula(Integer cantMaxDeAlumnos) {
+	public Aula(Integer numeroAula, Integer cantidadMaxDeAlumnos) {
 		this.id++;
-		this.cantMaxDeAlumnos = cantMaxDeAlumnos;
+		this.numeroAula = numeroAula;
+		this.cantMaxDeAlumnos = cantidadMaxDeAlumnos;
 	}
 
 	public Integer getId() {
@@ -25,4 +27,13 @@ public class Aula {
 	public void setCantMaxDeAlumnos(Integer cantMaxDeAlumnos) {
 		this.cantMaxDeAlumnos = cantMaxDeAlumnos;
 	}
+
+	public Integer getNumeroAula() {
+		return numeroAula;
+	}
+
+	public void setNumeroAula(Integer numeroAula) {
+		this.numeroAula = numeroAula;
+	}
+	
 }

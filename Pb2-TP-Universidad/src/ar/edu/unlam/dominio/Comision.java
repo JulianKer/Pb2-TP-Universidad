@@ -4,18 +4,20 @@ public class Comision {
 	
 	private Integer id = 0;
 	private Integer idComision;
-	private Materia nuevaMateria;
-	private CicloLectivo nuevoCiclo;
+	private Materia Materia;
+	private CicloLectivo Ciclo;
 	private Turno turno;
+	private Aula aula;
  
-	public Comision(Integer idComision, Materia nuevaMateria, CicloLectivo nuevoCiclo, Turno turno) {
+	public Comision(Integer idComision, Materia materia, CicloLectivo ciclo, Turno turno, Aula aula) {
 		this.id++;
 		this.idComision = idComision;
-		this.nuevaMateria = nuevaMateria;
-		this.nuevoCiclo = nuevoCiclo;
+		this.Materia = materia;
+		this.Ciclo = ciclo;
 		this.turno = turno;
+		this.aula = aula;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -32,20 +34,20 @@ public class Comision {
 		this.idComision = idComision;
 	}
 
-	public Materia getNuevaMateria() {
-		return nuevaMateria;
+	public Materia getMateria() {
+		return Materia;
 	}
 
-	public void setNuevaMateria(Materia nuevaMateria) {
-		this.nuevaMateria = nuevaMateria;
+	public void setMateria(Materia materia) {
+		Materia = materia;
 	}
 
-	public CicloLectivo getNuevoCiclo() {
-		return nuevoCiclo;
+	public CicloLectivo getCiclo() {
+		return Ciclo;
 	}
 
-	public void setNuevoCiclo(CicloLectivo nuevoCiclo) {
-		this.nuevoCiclo = nuevoCiclo;
+	public void setCiclo(CicloLectivo ciclo) {
+		Ciclo = ciclo;
 	}
 
 	public Turno getTurno() {
@@ -55,4 +57,13 @@ public class Comision {
 	public void setTurno(Turno turno) {
 		this.turno = turno;
 	}
+
+	public Aula getAula() {
+		return aula;
+	}
+
+	public void setAula(Aula aula) {
+		this.aula = aula;
+	}
+
 }

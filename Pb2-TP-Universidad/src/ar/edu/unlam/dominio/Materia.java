@@ -15,8 +15,8 @@ public class Materia {
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.correlativas = new ArrayList<>();
-		this.cantMaximaDeCorrelativas = 5;
-	}
+		this.cantMaximaDeCorrelativas = 5; // me base en el plan de estudios de desarrollo web,
+	}                                     // la materia con mas correlativas, tiene 5 correlativas
 
 	public Integer getId() {
 		return id;

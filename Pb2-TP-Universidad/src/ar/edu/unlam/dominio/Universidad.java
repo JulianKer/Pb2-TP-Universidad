@@ -181,25 +181,61 @@ public class Universidad {
 		return encontrada;
 	}
 
-	public Boolean inscribirAlumnoAComision(Integer dni, Integer idComision, LocalDate inscripcionDelAlumno) {
+	public Boolean inscribirAlumnoAComision(Integer dni, Integer idComision, LocalDate fechaQueSeInscribe) {
 		Boolean seInsrcibio = false;
-		InscripcionAlumnoComision nuevaInsAlumnoComision = buscarInscripcionPorDniAlumnoYIdCurso(dni, idComision);
+		InscripcionAlumnoComision nuevaInsAlumnoComision = buscarInscripcionPorDniAlumnoYIdComision(dni, idComision);
 		Alumno alumAInscribir = buscarAlumnoPorDni(dni);
 		Comision comAInscibir = buscarComisionPorIdComision(idComision);
 
-		if (nuevaInsAlumnoComision == null && alumAInscribir != null && comAInscibir != null) {
-			if (!inscripcionDelAlumno.isBefore(comAInscibir.getCiclo().getFechaInicioInscripcion())
-					&& !inscripcionDelAlumno.isAfter(comAInscibir.getCiclo().getFechaFinInscripcion())) {
-
-				nuevaInsAlumnoComision = new InscripcionAlumnoComision(alumAInscribir, comAInscibir);
-				seInsrcibio = this.inscripcionesAlumnoComison.add(nuevaInsAlumnoComision);
-
+		if (alumAInscribir != null && comAInscibir != null && nuevaInsAlumnoComision == null) {   //------------> verifico si los dos estan dados de alta
+			if (saberSiElAlumnoTieneLasCorrelativasCursadasDeUnaMateria(alumAInscribir,comAInscibir.getMateria())) { // ---->verifico si tiene las correlativas con + de 4
+				if (!fechaQueSeInscribe.isBefore(comAInscibir.getCiclo().getFechaInicioInscripcion())        // ----> verfico si se encuentra dentro
+						&& !fechaQueSeInscribe.isAfter(comAInscibir.getCiclo().getFechaFinInscripcion())) {  //------> de las fechas de inscripcion
+					if (comAInscibir.saberSiHayEspacioEnElAula()) {          // -----------> verifico si hay espacio en el aula
+						nuevaInsAlumnoComision = new InscripcionAlumnoComision(alumAInscribir, comAInscibir);
+						seInsrcibio = this.inscripcionesAlumnoComison.add(nuevaInsAlumnoComision);					
+					}
+				}
 			}
 		}
 		return seInsrcibio;
 	}
 
-	public InscripcionAlumnoComision buscarInscripcionPorDniAlumnoYIdCurso(Integer dni, Integer idComision) {
+	public Boolean saberSiElAlumnoTieneLasCorrelativasCursadasDeUnaMateria(Alumno alumno, Materia materia) { // con "cursadas"
+		Boolean tieneCursadasLasCorrelativas = false;                                             // se refiere a q si almenos tiene las 
+		Comision comisionDeCorrelativaEncontrada = null;
+		InscripcionAlumnoComision inscripcionDeCorrelativaEncontrada = null;
+		Integer cantAprobadas = 0;
+		
+		for (int i = 0; i < materia.getCorrelativas().size(); i++) {
+			comisionDeCorrelativaEncontrada = buscarComisionPorCodigoMateria(materia.getCorrelativas().get(i));
+			
+			if (comisionDeCorrelativaEncontrada != null) {
+				inscripcionDeCorrelativaEncontrada = buscarInscripcionPorDniAlumnoYIdComision(alumno.getDni(), comisionDeCorrelativaEncontrada.getIdComision());
+				if (inscripcionDeCorrelativaEncontrada != null && inscripcionDeCorrelativaEncontrada.calcularNotaFinal() >= 4) {
+					cantAprobadas++;
+				}
+			}
+		}
+		
+		if (cantAprobadas.equals(materia.getCorrelativas().size())) {
+			tieneCursadasLasCorrelativas = true;
+		}
+		return tieneCursadasLasCorrelativas;
+	}
+
+	public Comision buscarComisionPorCodigoMateria(Integer codigo) {
+		Comision encontrada = null;
+		
+		for (int i = 0; i < this.comisiones.size(); i++) {
+			if (this.comisiones.get(i).getMateria().getCodigo().equals(codigo)) {
+				encontrada = this.comisiones.get(i);
+			}
+		}
+		return encontrada;
+	}
+
+	public InscripcionAlumnoComision buscarInscripcionPorDniAlumnoYIdComision(Integer dni, Integer idComision) {
 		InscripcionAlumnoComision encontrada = null;
 
 		for (int i = 0; i < this.inscripcionesAlumnoComison.size(); i++) {

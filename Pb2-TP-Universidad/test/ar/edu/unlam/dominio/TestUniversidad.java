@@ -342,7 +342,10 @@ public class TestUniversidad {
 		
 		// los uno en una InscripcionAlumnoComision:
 		assertTrue(unlam.inscribirAlumnoAComision(dni, idComision, inscripcionDelAlumno));
-		assertTrue(unlam.inscribirAlumnoAComision(dni, idComision, inscripcionDelAlumno));
+		assertFalse(unlam.inscribirAlumnoAComision(dni, idComision, inscripcionDelAlumno));
 	}
+	probar el tema de evaluar a un alumno , meter correlativas a una materia para luego ver si
+	puedo evaluar o no, o ver si lo puedo inscribir en otra materia si no tiene aprobadas con +4
+	las correlativas, etc, hago un push pq me costó una banda esto jajaja
 
 }

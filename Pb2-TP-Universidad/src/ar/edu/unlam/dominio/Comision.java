@@ -66,4 +66,12 @@ public class Comision {
 		this.aula = aula;
 	}
 
+	public Boolean saberSiHayEspacioEnElAula() {
+		Boolean hayEspacio = false;
+		
+		if (this.aula.getCantAlumnos() < this.aula.getCantMaxDeAlumnos()) {
+			hayEspacio = true;
+		}
+		return hayEspacio;
+	}
 }

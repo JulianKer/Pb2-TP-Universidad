@@ -8,7 +8,6 @@ public class TestNota {
 
 	@Test
 	public void queSeCreeUnaNota() {
-		Integer valor = 7;
 		TipoDeNota tipo = TipoDeNota.PRIMER_PARCIAL;
 		
 		Nota nuevaNota = new Nota(tipo);

@@ -20,19 +20,47 @@ public class InscripcionAlumnoComision {
 		Boolean seCalifico = false;
 		Boolean asignado = false;
 		Nota encontrada = buscarNotaPorTipo(tipoDeNota);
-
+		
+		// aca declaro estas variables para no estar poniendo el buscar... cada vez q las necesito
+		Nota primerParcial = buscarNotaPorTipo(TipoDeNota.PRIMER_PARCIAL);
+		Nota segundoParcial = buscarNotaPorTipo(TipoDeNota.SEGUNDO_PARCIAL);
+		Nota recuPrimerParcial = buscarNotaPorTipo(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL);
+		Nota recuSegundoParcial = buscarNotaPorTipo(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL);
+		
 		if (this.notas.size() <= 3 && encontrada == null) {
-			if (!tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL)    //si el tipo no es de primerRecuperatorio
-					|| !tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) // o tampoco es de segundoRecuperatorio, entra.
-					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) // ahora, si es un primerRecuperatorio, NO tiene que 
-							&& buscarNotaPorTipo(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) == null   // haber un segudnoRecuperatorio
-					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL)      // y viceversa, si es de segudnoRecuperatorio,
-							&& buscarNotaPorTipo(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) == null) {  // NO tiene q haber un primerRecuperatorio
-
-				Nota nuevaNota = new Nota(tipoDeNota);
-				asignado = nuevaNota.asignarValor(valor);
-				if (asignado) {
-					seCalifico = this.notas.add(nuevaNota);
+			
+			if (tipoDeNota.equals(TipoDeNota.PRIMER_PARCIAL) || tipoDeNota.equals(TipoDeNota.SEGUNDO_PARCIAL)  /*si es 1er o 2do parcal, calificalo*/
+					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial != null && segundoParcial != null && recuPrimerParcial == null && recuSegundoParcial == null
+					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial == null && segundoParcial != null && recuPrimerParcial == null && recuSegundoParcial == null
+					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial != null && segundoParcial != null && recuPrimerParcial == null && recuSegundoParcial == null
+					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial != null && segundoParcial == null && recuPrimerParcial == null && recuSegundoParcial == null
+					) { 
+				/* 1-	Puedo calificar Recu1 si tengo p1 con -7 y p2 con +=7
+				 * 2-	Puedo calificar Recu1 si tengo p1 con -4 y p2 con  +=4 y -7
+				 * 3-	Puedo calificar Recu1 si tengo p1 con A y p2 con +=7
+				 * 4-	Puedo calificar Recu1 si tengo p1 con A y p2 con +=4 y -7
+				 * 
+				 * 
+				 * 1-	Puedo calificar Recu2 si tengo p1 con += 7 y p2 con -7
+				 * 2-	Puedo calificar Recu2 si tengo p1 con +=4 y -7 y p2 con -4
+				 * 3-	Puedo calificar Recu2 si tengo p1 con +=7 y p2 con A
+				 * 4-	Puedo calificar Recu2 si tengo p1 con +=4 y -7 y p2 con A
+*/
+				if (tipoDeNota.equals(TipoDeNota.PRIMER_PARCIAL) || tipoDeNota.equals(TipoDeNota.SEGUNDO_PARCIAL)
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial == null && segundoParcial.getValor() >= 7
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial == null && segundoParcial.getValor() >= 4 && segundoParcial.getValor() < 7
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >= 7 && segundoParcial == null
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >=4 && primerParcial.getValor() < 7 && segundoParcial == null
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial.getValor() < 7 && segundoParcial.getValor() >= 7
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial.getValor() < 4 && segundoParcial.getValor() >= 4 && segundoParcial.getValor() < 7
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >= 7 && segundoParcial.getValor() < 7
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >= 4 && primerParcial.getValor() < 7 && segundoParcial.getValor() < 4) {
+					
+					Nota nuevaNota = new Nota(tipoDeNota);
+					asignado = nuevaNota.asignarValor(valor);
+					if (asignado) {
+						seCalifico = this.notas.add(nuevaNota);
+					}
 				}
 			}
 		}
@@ -85,6 +113,7 @@ public class InscripcionAlumnoComision {
 	public Integer calcularNotaFinal() {
 		Integer notaFinal = 0;
 
+		// aca declaro estas variables para no estar poniendo el buscar... cada vez q las necesito
 		Nota primerParcial = buscarNotaPorTipo(TipoDeNota.PRIMER_PARCIAL);
 		Nota segundoParcial = buscarNotaPorTipo(TipoDeNota.SEGUNDO_PARCIAL);
 		Nota recuPrimerParcial = buscarNotaPorTipo(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL);

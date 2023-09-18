@@ -10,8 +10,6 @@ public class TestCicloLectivo {
 
 	@Test
 	public void queSeCreeUnCicloLectivo() {
-		String name = "Unlam";
-		Universidad unlam = new Universidad(name);
 		
 		LocalDate fechaInicioCiclo = LocalDate.of(2023, 04, 05);
 		LocalDate fechaFinCiclo = LocalDate.of(2023, 07, 05);

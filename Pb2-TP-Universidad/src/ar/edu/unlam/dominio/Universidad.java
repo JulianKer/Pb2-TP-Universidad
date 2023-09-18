@@ -51,17 +51,8 @@ public class Universidad {
 				encontrado = this.alumnos.get(i);
 			}
 		}
-//		Boolean yaExiste = this.alumnos.contains(nuevoAlumno);
-//		Alumno encontrado = null;
-//		 primero pregunto si lo contiene, si lo contiene, buscamelo, sino devolve null
-//		if (yaExiste) {
-//			encontrado = this.alumnos.get(this.alumnos.indexOf(nuevoAlumno));
-//		}
-//      aca le pido al array q me de algo segun un indice, y el indice
-//      lo obtengo pasandole un objeto al indexOf y me devuelve su posicion
-//      podria haber usado el for de toda la vida, si pero asi me manejo con arraylist
-
-//      aunq aca me comparo objeto con objeto y no por dni
+		// para buscar un alumno en especifico podria usar el .contains(alumno) pero
+		// como necesito buscarlo x dni, necesito hacer el for igual q antes
 		return encontrado;
 	}
 
@@ -89,13 +80,28 @@ public class Universidad {
 
 	public Boolean registrarComision(Comision nuevaComision) {
 		Boolean seRegistro = false;
-		Comision encontrada = buscarComisionPorIdComision(nuevaComision.getIdComision());
+		Comision encontradaPorId = buscarComisionPorIdComision(nuevaComision.getIdComision());
+		Comision encontradaPorTurnoYAula = buscarComisionPorTurnoYAula(nuevaComision);
 
-		if (encontrada == null) {
-			this.comisiones.add(nuevaComision);
-			seRegistro = true;
+		if (encontradaPorId == null) {
+			if (encontradaPorTurnoYAula == null) {
+				this.comisiones.add(nuevaComision);
+				seRegistro = true;
+			}
 		}
 		return seRegistro;
+	}
+
+	public Comision buscarComisionPorTurnoYAula(Comision nuevaComision) {
+		Comision encontrada = null;
+
+		for (int i = 0; i < this.comisiones.size(); i++) {
+			if (this.comisiones.get(i).getTurno().equals(nuevaComision.getTurno()) && this.comisiones.get(i).getAula()
+					.getNumeroAula().equals(nuevaComision.getAula().getNumeroAula())) {
+				encontrada = this.comisiones.get(i);
+			}
+		}
+		return encontrada;
 	}
 
 	public Comision buscarComisionPorIdComision(Integer idComision) {
@@ -187,13 +193,17 @@ public class Universidad {
 		Alumno alumAInscribir = buscarAlumnoPorDni(dni);
 		Comision comAInscibir = buscarComisionPorIdComision(idComision);
 
-		if (alumAInscribir != null && comAInscibir != null && nuevaInsAlumnoComision == null) {   //------------> verifico si los dos estan dados de alta
-			if (saberSiElAlumnoTieneLasCorrelativasCursadasDeUnaMateria(alumAInscribir,comAInscibir.getMateria())) { // ---->verifico si tiene las correlativas con + de 4
-				if (!fechaQueSeInscribe.isBefore(comAInscibir.getCiclo().getFechaInicioInscripcion())        // ----> verfico si se encuentra dentro
-						&& !fechaQueSeInscribe.isAfter(comAInscibir.getCiclo().getFechaFinInscripcion())) {  //------> de las fechas de inscripcion
-					if (comAInscibir.saberSiHayEspacioEnElAula()) {          // -----------> verifico si hay espacio en el aula
+		if (alumAInscribir != null && comAInscibir != null && nuevaInsAlumnoComision == null) { 
+																								
+			if (saberSiElAlumnoTieneLasCorrelativasDeUnaMateriaConPorLoMenosMasDe4(alumAInscribir,
+					comAInscibir.getMateria())) { //         ---->  verifico si tiene las correlativas con + de 4
+				
+				if (!fechaQueSeInscribe.isBefore(comAInscibir.getCiclo().getFechaInicioInscripcion()) // ----> verifico que se
+						&& !fechaQueSeInscribe.isAfter(comAInscibir.getCiclo().getFechaFinInscripcion())) { // encuentre dentro de
+					                                                                                        // la fecha
+					if (comAInscibir.saberSiHayEspacioEnElAula()) { // -----------> verifico si hay espacio en el aula
 						nuevaInsAlumnoComision = new InscripcionAlumnoComision(alumAInscribir, comAInscibir);
-						seInsrcibio = this.inscripcionesAlumnoComison.add(nuevaInsAlumnoComision);					
+						seInsrcibio = this.inscripcionesAlumnoComison.add(nuevaInsAlumnoComision);
 					}
 				}
 			}
@@ -201,23 +211,26 @@ public class Universidad {
 		return seInsrcibio;
 	}
 
-	public Boolean saberSiElAlumnoTieneLasCorrelativasCursadasDeUnaMateria(Alumno alumno, Materia materia) { // con "cursadas"
-		Boolean tieneCursadasLasCorrelativas = false;                                             // se refiere a q si almenos tiene las 
+	public Boolean saberSiElAlumnoTieneLasCorrelativasDeUnaMateriaConPorLoMenosMasDe4(Alumno alumno, Materia materia) { // con
+																														// "cursadas"
+		Boolean tieneCursadasLasCorrelativas = false;                             // se refiere a q si almenos las tiene con mas de 4
 		Comision comisionDeCorrelativaEncontrada = null;
 		InscripcionAlumnoComision inscripcionDeCorrelativaEncontrada = null;
 		Integer cantAprobadas = 0;
-		
+
 		for (int i = 0; i < materia.getCorrelativas().size(); i++) {
 			comisionDeCorrelativaEncontrada = buscarComisionPorCodigoMateria(materia.getCorrelativas().get(i));
-			
+
 			if (comisionDeCorrelativaEncontrada != null) {
-				inscripcionDeCorrelativaEncontrada = buscarInscripcionPorDniAlumnoYIdComision(alumno.getDni(), comisionDeCorrelativaEncontrada.getIdComision());
-				if (inscripcionDeCorrelativaEncontrada != null && inscripcionDeCorrelativaEncontrada.calcularNotaFinal() >= 4) {
+				inscripcionDeCorrelativaEncontrada = buscarInscripcionPorDniAlumnoYIdComision(alumno.getDni(),
+						comisionDeCorrelativaEncontrada.getIdComision());
+				if (inscripcionDeCorrelativaEncontrada != null
+						&& inscripcionDeCorrelativaEncontrada.calcularNotaFinal() >= 4) {
 					cantAprobadas++;
 				}
 			}
 		}
-		
+
 		if (cantAprobadas.equals(materia.getCorrelativas().size())) {
 			tieneCursadasLasCorrelativas = true;
 		}
@@ -226,7 +239,7 @@ public class Universidad {
 
 	public Comision buscarComisionPorCodigoMateria(Integer codigo) {
 		Comision encontrada = null;
-		
+
 		for (int i = 0; i < this.comisiones.size(); i++) {
 			if (this.comisiones.get(i).getMateria().getCodigo().equals(codigo)) {
 				encontrada = this.comisiones.get(i);
@@ -245,5 +258,59 @@ public class Universidad {
 			}
 		}
 		return encontrada;
+	}
+
+	public Boolean evaluar(Integer dni, Integer codigoMateria, TipoDeNota tipoDeNota, Integer valorNota) {
+		Boolean seEvaluo = false;
+
+		Alumno alumnoEncontrado = buscarAlumnoPorDni(dni);
+		Materia materiaEncontrada = buscarMateriaPorCodigo(codigoMateria);
+		Comision comisionEncontradaPorLaMateria;
+		InscripcionAlumnoComision inscripcionEncontradaPorAlumnoYComision;
+
+		if (alumnoEncontrado != null && materiaEncontrada != null) {
+			comisionEncontradaPorLaMateria = buscarComisionPorCodigoMateria(codigoMateria);
+
+			if (comisionEncontradaPorLaMateria != null) {
+				inscripcionEncontradaPorAlumnoYComision = buscarInscripcionPorDniAlumnoYIdComision(dni,
+						comisionEncontradaPorLaMateria.getIdComision());
+
+				if (inscripcionEncontradaPorAlumnoYComision != null
+						&& saberSiElAlumnoTieneLasCorrelativasDeUnaMateriaConMasDe7(dni, materiaEncontrada)) {
+					seEvaluo = inscripcionEncontradaPorAlumnoYComision.calificar(tipoDeNota, valorNota);
+				}
+			}
+		}
+		return seEvaluo;
+	}
+
+	public Boolean saberSiElAlumnoTieneLasCorrelativasDeUnaMateriaConMasDe7(Integer dni, Materia materia) {
+		Boolean lasTieneConMasDe7 = false;
+		Integer cantMateriasConMasDe7 = 0;
+		Comision comisionDeLaCorrelativaEncontrada = null;
+		InscripcionAlumnoComision insAlumComEncontrada = null;
+		Integer notaFinal = 0;
+
+		for (int i = 0; i < materia.getCorrelativas().size(); i++) {
+			comisionDeLaCorrelativaEncontrada = buscarComisionPorCodigoMateria(materia.getCodigo());
+
+			if (comisionDeLaCorrelativaEncontrada != null) {
+				insAlumComEncontrada = buscarInscripcionPorDniAlumnoYIdComision(dni,
+						comisionDeLaCorrelativaEncontrada.getIdComision());
+
+				if (insAlumComEncontrada != null) {
+					notaFinal = insAlumComEncontrada.calcularNotaFinal();
+
+					if (notaFinal >= 7) {
+						cantMateriasConMasDe7++;
+					}
+				}
+			}
+		}
+
+		if (cantMateriasConMasDe7.equals(materia.getCorrelativas().size())) {
+			lasTieneConMasDe7 = true;
+		}
+		return lasTieneConMasDe7;
 	}
 }

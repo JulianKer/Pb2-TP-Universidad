@@ -15,5 +15,17 @@ public class TestProfesor {
 		
 		assertNotNull(nuevoProfe);
 	}
+	
+	@Test
+	public void queSeCreeUnProfesorConSusRespectivosAtributos() {
+		Integer dniP = 1234567;
+		String nombreP = "Andy", apellidoP = "Borgeat";
+		
+		Profesor nuevoProfe = new Profesor(dniP, nombreP, apellidoP);
+		
+		assertEquals(dniP, nuevoProfe.getDni());
+		assertEquals(nombreP, nuevoProfe.getNombre());
+		assertEquals(apellidoP, nuevoProfe.getApellido());
+	}
 
 }

@@ -10,8 +10,6 @@ public class TestComision {
 
 	@Test
 	public void queSeCreeUnaComsion() {
-		String name = "unlam";
-		Universidad unlam = new Universidad(name);
 		
 		Integer codigo = 910;
 		String nombre = "Pb2";

@@ -60,6 +60,34 @@ public class TestUniversidad {
 	}
 	
 	@Test
+	public void queNoSeRegistreUnAulaDeMismoNumero() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		Integer numeroAula = 406;
+		Integer cantidadDeAlumnos1 = 30, cantidadDeAlumnos2 = 70;
+		Aula nuevaAula1 = new Aula(numeroAula, cantidadDeAlumnos1);
+		Aula nuevaAula2 = new Aula(numeroAula, cantidadDeAlumnos2);
+		
+		assertTrue(unlam.registrarAula(nuevaAula1));
+		assertFalse(unlam.registrarAula(nuevaAula2));
+	}
+	
+	@Test
+	public void queSeRegistrenDosAulasDistintas() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		Integer numeroAula1 = 406, numeroAula2 = 120;
+		Integer cantidadDeAlumnos1 = 30, cantidadDeAlumnos2 = 70;
+		Aula nuevaAula1 = new Aula(numeroAula1, cantidadDeAlumnos1);
+		Aula nuevaAula2 = new Aula(numeroAula2, cantidadDeAlumnos2);
+		
+		assertTrue(unlam.registrarAula(nuevaAula1));
+		assertTrue(unlam.registrarAula(nuevaAula2));
+	}
+	
+	@Test
 	public void queSeRegistreLaMateria() {
 		String name = "Unlam";
 		Universidad unlam = new Universidad(name);
@@ -87,6 +115,21 @@ public class TestUniversidad {
 	}
 	
 	@Test
+	public void queSeRegistrenMateriaDistintas() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		Integer codigo1 = 2540, codigo2 = 2610;
+		String nombre = "Pb2", nombre2 = "Bsd1";
+		
+		Materia nuevaMateria1 = new Materia(codigo1, nombre);
+		Materia nuevaMateria2 = new Materia(codigo2, nombre2);
+		
+		assertTrue(unlam.registraMateria(nuevaMateria1));
+		assertTrue(unlam.registraMateria(nuevaMateria2));
+	}
+	
+	@Test
 	public void queSeAgregueUnaCorrelativaAUnaMateria() {
 		String name = "Unlam";
 		Universidad unlam = new Universidad(name);
@@ -102,6 +145,30 @@ public class TestUniversidad {
 		unlam.registraMateria(nuevaMateria2);
 		
 		assertTrue(unlam.agregarCorrelativaAUnaMateria(codigo, codigo2));
+	}
+	
+	@Test
+	public void queSeAgreguenMasDeUnaCorrelativaAUnaMateria() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		Integer codigo = 910;
+		String nombre = "Pb2";
+		Materia nuevaMateria = new Materia(codigo, nombre);
+		unlam.registraMateria(nuevaMateria);
+		
+		Integer codigo2 = 810;
+		String nombre2 = "Pb1";
+		Materia nuevaMateria2 = new Materia(codigo2, nombre2);
+		unlam.registraMateria(nuevaMateria2);
+		
+		Integer codigo3 = 500;
+		String nombre3 = "Informatica General";
+		Materia nuevaMateria3 = new Materia(codigo3, nombre3);
+		unlam.registraMateria(nuevaMateria3);
+		
+		assertTrue(unlam.agregarCorrelativaAUnaMateria(codigo, codigo2));
+		assertTrue(unlam.agregarCorrelativaAUnaMateria(codigo, codigo3));
 	}
 	
 	@Test
@@ -165,34 +232,6 @@ public class TestUniversidad {
 	}
 	
 	@Test
-	public void queSeRegistreUnProfesor() {
-		String name = "Unlam";
-		Universidad unlam = new Universidad(name);
-		
-		Integer dniP = 1234567;
-		String nombreP = "Andy", apellidoP = "Borgeat";
-		
-		Profesor nuevoProfe = new Profesor(dniP, nombreP, apellidoP);
-		
-		assertTrue(unlam.registrarProfesor(nuevoProfe));
-	}
-	
-	@Test
-	public void queNoSeRegistreUnProfesorConMismoDni() {
-		String name = "Unlam";
-		Universidad unlam = new Universidad(name);
-		
-		Integer dniP = 1234567;
-		String nombreP = "Andy", apellidoP = "Borgeat";
-		
-		Profesor nuevoProfe = new Profesor(dniP, nombreP, apellidoP);
-		
-		assertTrue(unlam.registrarProfesor(nuevoProfe));
-		assertFalse(unlam.registrarProfesor(nuevoProfe));
-	}
-	
-	
-	@Test
 	public void queSeRegistreUnaComision() {
 		String name = "Unlam";
 		Universidad unlam = new Universidad(name);
@@ -250,7 +289,34 @@ public class TestUniversidad {
 	}
 	
 	@Test
-	public void queNoSeRegistreUnaComisionQueTieneDistintoIdPeroIgualMateria() {
+	public void queSeRegistreUnProfesor() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		Integer dniP = 1234567;
+		String nombreP = "Andy", apellidoP = "Borgeat";
+		
+		Profesor nuevoProfe = new Profesor(dniP, nombreP, apellidoP);
+		
+		assertTrue(unlam.registrarProfesor(nuevoProfe));
+	}
+	
+	@Test
+	public void queNoSeRegistreUnProfesorConMismoDni() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		Integer dniP = 1234567;
+		String nombreP = "Andy", apellidoP = "Borgeat";
+		
+		Profesor nuevoProfe = new Profesor(dniP, nombreP, apellidoP);
+		
+		assertTrue(unlam.registrarProfesor(nuevoProfe));
+		assertFalse(unlam.registrarProfesor(nuevoProfe));
+	}
+	
+	@Test
+	public void queSeAsigneUnProfeAUnaComision() {
 		String name = "Unlam";
 		Universidad unlam = new Universidad(name);
 		
@@ -274,8 +340,156 @@ public class TestUniversidad {
 		Integer codigoComision = 1300;
 		Comision nuevaComision = new Comision(codigoComision, nuevaMateria, nuevoCiclo, Turno.MANANA, nuevaAula, Dias.LUN_Y_JUE);
 		
-		assertTrue(unlam.registrarComision(nuevaComision));
-		assertFalse(unlam.registrarComision(nuevaComision));
+		unlam.registrarComision(nuevaComision);
+		
+		//creo alumno:
+		Integer dni = 12345678;
+		String nombreA = "Julian", apellido = "Ker";
+		LocalDate fechaNacimiento = LocalDate.of(2004, 10, 13);
+		LocalDate fechaIngreso = LocalDate.of(2023, 4, 07);
+		
+		Alumno nuevoAlumno = new Alumno(dni, nombreA, apellido, fechaNacimiento, fechaIngreso);
+		unlam.registrarAlumno(nuevoAlumno);
+		
+		Integer dia= 5;
+		Integer mes = 03;
+		Integer año = 2023;
+		
+		LocalDate fechaInscripcionDelAlumno = LocalDate.of(año, mes, dia);
+		
+		// los uno en una InscripcionAlumnoComision:
+		assertTrue(unlam.inscribirAlumnoAComision(dni, codigoComision, fechaInscripcionDelAlumno));
+		
+		
+		Integer dniP = 1234567;
+		String nombreP = "Andy", apellidoP = "Borgeat";
+		
+		Profesor nuevoProfe = new Profesor(dniP, nombreP, apellidoP);
+		
+		unlam.registrarProfesor(nuevoProfe);
+		
+		assertTrue(unlam.asignarProfesorComision(dniP, codigoComision));
+	}
+	
+	@Test
+	public void queNoSeAsigneUnMismoProfeAUnaComision() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		Integer codigo = 910;
+		String nombre = "Pb2";
+		Materia nuevaMateria = new Materia(codigo, nombre);
+		unlam.registraMateria(nuevaMateria);
+		
+		LocalDate fechaInicioCiclo = LocalDate.of(2023, 04, 05);
+		LocalDate fechaFinCiclo = LocalDate.of(2023, 07, 05);
+		LocalDate fechaInicioInscripcion = LocalDate.of(2023, 03, 01);
+		LocalDate fechaFinInscripcion = LocalDate.of(2023, 03, 10);
+		
+		CicloLectivo nuevoCiclo = new CicloLectivo(fechaInicioCiclo, fechaFinCiclo, fechaInicioInscripcion, fechaFinInscripcion);
+		unlam.registrarCicloLectivo(nuevoCiclo);
+		
+		Integer numeroAula = 406;
+		Integer cantidadDeAlumnos = 30;
+		Aula nuevaAula = new Aula(numeroAula, cantidadDeAlumnos);
+		
+		Integer codigoComision = 1300;
+		Comision nuevaComision = new Comision(codigoComision, nuevaMateria, nuevoCiclo, Turno.MANANA, nuevaAula, Dias.LUN_Y_JUE);
+		
+		unlam.registrarComision(nuevaComision);
+		
+		//creo alumno:
+		Integer dni = 12345678;
+		String nombreA = "Julian", apellido = "Ker";
+		LocalDate fechaNacimiento = LocalDate.of(2004, 10, 13);
+		LocalDate fechaIngreso = LocalDate.of(2023, 4, 07);
+		
+		Alumno nuevoAlumno = new Alumno(dni, nombreA, apellido, fechaNacimiento, fechaIngreso);
+		unlam.registrarAlumno(nuevoAlumno);
+		
+		Integer dia= 5;
+		Integer mes = 03;
+		Integer año = 2023;
+		
+		LocalDate fechaInscripcionDelAlumno = LocalDate.of(año, mes, dia);
+		
+		// los uno en una InscripcionAlumnoComision:
+		assertTrue(unlam.inscribirAlumnoAComision(dni, codigoComision, fechaInscripcionDelAlumno));
+		
+		
+		Integer dniP = 1234567;
+		String nombreP = "Andy", apellidoP = "Borgeat";
+		
+		Profesor nuevoProfe = new Profesor(dniP, nombreP, apellidoP);
+		
+		unlam.registrarProfesor(nuevoProfe);
+		
+		assertTrue(unlam.asignarProfesorComision(dniP, codigoComision));
+		assertFalse(unlam.asignarProfesorComision(dniP, codigoComision));
+	}
+	
+	@Test
+	public void queNoSeAsigneUnProfeMasDeLosNecesariosAUnaComision() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		Integer codigo = 910;
+		String nombre = "Pb2";
+		Materia nuevaMateria = new Materia(codigo, nombre);
+		unlam.registraMateria(nuevaMateria);
+		
+		LocalDate fechaInicioCiclo = LocalDate.of(2023, 04, 05);
+		LocalDate fechaFinCiclo = LocalDate.of(2023, 07, 05);
+		LocalDate fechaInicioInscripcion = LocalDate.of(2023, 03, 01);
+		LocalDate fechaFinInscripcion = LocalDate.of(2023, 03, 10);
+		
+		CicloLectivo nuevoCiclo = new CicloLectivo(fechaInicioCiclo, fechaFinCiclo, fechaInicioInscripcion, fechaFinInscripcion);
+		unlam.registrarCicloLectivo(nuevoCiclo);
+		
+		Integer numeroAula = 406;
+		Integer cantidadDeAlumnos = 30;
+		Aula nuevaAula = new Aula(numeroAula, cantidadDeAlumnos);
+		
+		Integer codigoComision = 1300;
+		Comision nuevaComision = new Comision(codigoComision, nuevaMateria, nuevoCiclo, Turno.MANANA, nuevaAula, Dias.LUN_Y_JUE);
+		
+		unlam.registrarComision(nuevaComision);
+		
+		//creo alumno:
+		Integer dni = 12345678;
+		String nombreA = "Julian", apellido = "Ker";
+		LocalDate fechaNacimiento = LocalDate.of(2004, 10, 13);
+		LocalDate fechaIngreso = LocalDate.of(2023, 4, 07);
+		
+		Alumno nuevoAlumno = new Alumno(dni, nombreA, apellido, fechaNacimiento, fechaIngreso);
+		unlam.registrarAlumno(nuevoAlumno);
+		
+		Integer dia= 5;
+		Integer mes = 03;
+		Integer año = 2023;
+		
+		LocalDate fechaInscripcionDelAlumno = LocalDate.of(año, mes, dia);
+		
+		// los uno en una InscripcionAlumnoComision:
+		assertTrue(unlam.inscribirAlumnoAComision(dni, codigoComision, fechaInscripcionDelAlumno));
+		
+		
+		Integer dniP = 1234567;
+		String nombreP = "Andy", apellidoP = "Borgeat";
+		
+		Profesor nuevoProfe = new Profesor(dniP, nombreP, apellidoP);
+		unlam.registrarProfesor(nuevoProfe);
+		
+		Integer dniP2 = 5684215;
+		String nombreP2 = "German", apellidoP2 = "Mazza";
+		
+		Profesor nuevoProfe2 = new Profesor(dniP2, nombreP2, apellidoP2);
+		unlam.registrarProfesor(nuevoProfe2);
+		
+		
+		
+		assertTrue(unlam.asignarProfesorComision(dniP, codigoComision));
+		assertFalse(unlam.asignarProfesorComision(dniP2, codigoComision));
 	}
 	
 	@Test
@@ -1123,8 +1337,6 @@ public class TestUniversidad {
 		
 		Alumno nuevoAlumno3 = new Alumno(dni3, nombreA3, apellido3, fechaNacimiento3, fechaIngreso3);
 		unlam.registrarAlumno(nuevoAlumno3);
-		
-		//ñññññññ
 		
 		Integer cantObtenida = unlam.obtenerMateriasQueFaltanCursarParaUnAlumno(dni).size();
 		

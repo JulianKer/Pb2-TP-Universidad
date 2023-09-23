@@ -13,7 +13,8 @@ public class Universidad {
 	private ArrayList<Aula> aulas;
 	private ArrayList<Comision> comisiones;
 	private ArrayList<InscripcionAlumnoComision> inscripcionesAlumnoComison;
-
+	private ArrayList<InscripcionProfesorComision> inscripcionesProfeComision;
+	
 	public Universidad(String nombre) {
 		this.nombre = nombre;
 		this.alumnos = new ArrayList<>();
@@ -25,6 +26,7 @@ public class Universidad {
 		this.aulas = new ArrayList<>();
 		this.comisiones = new ArrayList<>();
 		this.inscripcionesAlumnoComison = new ArrayList<>();
+		this.inscripcionesProfeComision = new ArrayList<>();
 	}
 
 	public String getNombre() {
@@ -219,10 +221,8 @@ public class Universidad {
 					if (saberSiHayEspacioEnElAula(comAInscibir.getAula())) {// --> verifico si hay espacio en el aula
 						
 						if (!saberSiEstaInscriptoEnOtraComisionEnElMismoTurnoDiaYCiclo(alumAInscribir, comAInscibir)) { //--> verifico que NO 
-							//esté inscripto en una comision 
-							//de mismo dia, turno y cicloLectivo.
+							//esté inscripto en una comision de mismo dia, turno y cicloLectivo.
 							
-//							 me falta verificar si la materia a la que se quiere inscribir esta promoocionda o no                                                          
 							
 							// lo separe en varios if para organizarlo
 							nuevaInsAlumnoComision = new InscripcionAlumnoComision(alumAInscribir, comAInscibir);
@@ -443,6 +443,109 @@ public class Universidad {
 		return encontrado;
 	}
 	
+	public Boolean asignarProfesorComision(Integer dni, Integer codigoComision) {
+	
+		Profesor profeEncontrado = buscarProfesorPorDni(dni);
+		Comision comisionEncontrada = buscarComisionPorIdComision(codigoComision);
+		
+		if (profeEncontrado == null || comisionEncontrada == null) {
+			return false;			
+		}
+		
+		if (saberSiElPorfeYaEsDocenteEnEstaComision(dni, codigoComision)) {
+			return false;			
+		} 
+		
+		if (saberSiElProfeEstaEnOtraComisionDeMismoCicloTurnoYDias(dni, comisionEncontrada)) {
+			return false;			
+		}
+		
+		if (saberCuantosProfesHayEnLaComision(codigoComision) >= saberCantidadDeProfesNecesariosParaUnaComision(codigoComision)) {
+			return false;			
+		}
+		
+		InscripcionProfesorComision insProfeComision = new InscripcionProfesorComision(profeEncontrado, comisionEncontrada);
+		
+		return this.inscripcionesProfeComision.add(insProfeComision);
+	}
+
+	private Boolean saberSiElProfeEstaEnOtraComisionDeMismoCicloTurnoYDias(Integer dni, Comision comisionEncontrada) {
+		Boolean estaEnOtra = false;
+		
+		for (int i = 0; i < this.inscripcionesProfeComision.size(); i++) {
+			if (this.inscripcionesProfeComision.get(i).getProfesor().getDni().equals(dni) 
+					&& this.inscripcionesProfeComision.get(i).getComision().getCiclo().getFechaInicioCiclo().equals(comisionEncontrada.getCiclo().getFechaInicioCiclo())
+					&& this.inscripcionesProfeComision.get(i).getComision().getCiclo().getFechaFinCiclo().equals(comisionEncontrada.getCiclo().getFechaFinCiclo())
+					&& this.inscripcionesProfeComision.get(i).getComision().getTurno().equals(comisionEncontrada.getTurno()) 
+					&& this.inscripcionesProfeComision.get(i).getComision().getDias().equals(comisionEncontrada.getDias())) {
+				estaEnOtra = true;
+			}
+		}
+		
+		return estaEnOtra;
+	}
+
+	private Integer saberCantidadDeProfesNecesariosParaUnaComision(Integer codigoComision) {
+		Integer profesNecesarios = 0;
+		Integer cantAlumnos = 0;
+		
+		for (int i = 0; i < this.inscripcionesAlumnoComison.size(); i++) {
+			if (this.inscripcionesAlumnoComison.get(i).getComision().getIdComision().equals(codigoComision) // coincide la comision
+					&& this.inscripcionesAlumnoComison.get(i).calcularNotaFinal().equals(0)) {// esa inscripcion no debe tener nota final
+				cantAlumnos++;      // pq sino, estaria contando un alumno de una inscripcion de mismo codigo pero q ya fue aprobado, entonces no cuenta
+			}
+		}
+		                                  // 1 profe cada 20
+		profesNecesarios = (int) Math.ceil(cantAlumnos/20.0); // ceil redondea, ej: cantAlumnos es de 21, entonces: 21/20 = 1.05--> redondea a 2
+		return profesNecesarios;                     // osea que necesito 2 profesores 
+	}
+
+	private Integer saberCuantosProfesHayEnLaComision(Integer codigoComision) {
+		Integer cantProfesEnLaComsion = 0;
+		
+		for (int i = 0; i < inscripcionesProfeComision.size(); i++) {
+			if (this.inscripcionesProfeComision.get(i).getComision().getIdComision().equals(codigoComision)) {
+				cantProfesEnLaComsion++;
+			}
+		}
+		return cantProfesEnLaComsion;
+	}
+
+	private Boolean saberSiElPorfeYaEsDocenteEnEstaComision(Integer dni, Integer codigoComision) {
+		Boolean yaEsDocenteEnOtra = false;
+		
+		for (int i = 0; i < this.inscripcionesProfeComision.size(); i++) {
+			if (this.inscripcionesProfeComision.get(i).getComision().getIdComision().equals(codigoComision)
+					&& this.inscripcionesProfeComision.get(i).getProfesor().getDni().equals(dni)) {
+				yaEsDocenteEnOtra = true;
+			}
+		}
+		return yaEsDocenteEnOtra;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 	public ArrayList<Materia> obtenerMateriasQueFaltanCursarParaUnAlumno(Integer dniAlumno) {
 		Alumno encontrado = buscarAlumnoPorDni(dniAlumno);
 		
@@ -611,4 +714,5 @@ public class Universidad {
 		this.agregarCorrelativaAUnaMateria(codigo20, codigo18);
 		this.registraMateria(nueva20);
 	}
+
 }

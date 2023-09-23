@@ -4,7 +4,8 @@ import java.time.LocalDate;
 
 public class Alumno {
 	
-	private Integer id = 0;
+	private static Integer contadorIdIncrementadoAlumno = 0;
+	private Integer idAlumno;
 	private Integer dni;
 	private String nombre;
 	private String apellido;
@@ -12,12 +13,13 @@ public class Alumno {
 	private LocalDate fechaIngreso;
 
 	public Alumno(Integer dni, String nombre, String apellido, LocalDate fechaNacimiento, LocalDate fechaIngreso) {
-		this.id++;
 		this.dni = dni;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.fechaNacimiento = fechaNacimiento;
 		this.fechaIngreso = fechaIngreso;
+		Alumno.contadorIdIncrementadoAlumno++;
+		this.idAlumno = contadorIdIncrementadoAlumno;
 	}
 
 	public Integer getDni() {
@@ -60,12 +62,12 @@ public class Alumno {
 		this.fechaIngreso = fechaIngreso;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getIdAlumno() {
+		return idAlumno;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.idAlumno = id;
 	}
 	
 	

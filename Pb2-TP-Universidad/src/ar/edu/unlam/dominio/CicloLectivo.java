@@ -4,7 +4,8 @@ import java.time.LocalDate;
 
 public class CicloLectivo {
 	
-	private Integer id = 0;
+	private static Integer contadorIdIncrementadoCiclo = 0;
+	private Integer idDelCiclo;
 	private LocalDate fechaInicioCiclo;
 	private LocalDate fechaFinCiclo;
 	private LocalDate fechaInicioInscripcion;
@@ -12,19 +13,22 @@ public class CicloLectivo {
 
 	public CicloLectivo(LocalDate fechaInicioCiclo, LocalDate fechaFinCiclo, LocalDate fechaInicioInscripcion,
 			LocalDate fechaFinInscripcion) {
-		this.id++;
+		
 		this.fechaInicioCiclo = fechaInicioCiclo;
 		this.fechaFinCiclo = fechaFinCiclo;
 		this.fechaInicioInscripcion = fechaInicioInscripcion;
 		this.fechaFinInscripcion = fechaFinInscripcion;
+		
+		CicloLectivo.contadorIdIncrementadoCiclo++;
+		this.idDelCiclo = contadorIdIncrementadoCiclo;
 	}
 	
-	public Integer getId() {
-		return id;
+	public Integer getIdDelCiclo() {
+		return this.idDelCiclo;
 	}
-
-	public void setId(Integer id) {
-		this.id = id;
+	
+	public static Integer getContadorIdIncrementado() {
+		return CicloLectivo.contadorIdIncrementadoCiclo;
 	}
 
 	public LocalDate getFechaInicioCiclo() {

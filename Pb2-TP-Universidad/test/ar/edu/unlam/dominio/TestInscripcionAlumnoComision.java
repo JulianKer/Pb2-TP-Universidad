@@ -33,7 +33,7 @@ public class TestInscripcionAlumnoComision {
 		unlam.registrarAula(nuevaAula);
 		
 		Integer idComision = 1300;
-		Comision nuevaComision = new Comision(idComision, nuevaMateria, nuevoCiclo, Turno.MANANA, nuevaAula);
+		Comision nuevaComision = new Comision(idComision, nuevaMateria, nuevoCiclo, Turno.MANANA, nuevaAula, Dias.LUN_Y_JUE);
 		unlam.registrarComision(nuevaComision);
 		
 		//creo alumno:
@@ -55,7 +55,7 @@ public class TestInscripcionAlumnoComision {
 		// los uno en una InscripcionAlumnoComision:
 
 		assertTrue(unlam.inscribirAlumnoAComision(dni, idComision, inscripcionDelAlumno));
-		assertTrue(unlam.inscribirAlumnoAComision(dni, idComision, inscripcionDelAlumno));
+		assertFalse(unlam.inscribirAlumnoAComision(dni, idComision, inscripcionDelAlumno));
 	}
 
 }

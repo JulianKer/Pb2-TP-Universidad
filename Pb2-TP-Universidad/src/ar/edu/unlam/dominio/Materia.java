@@ -4,28 +4,28 @@ import java.util.ArrayList;
 
 public class Materia {
 
-	private Integer id = 0;
+	private static Integer contadorIdIncrementadoMateria = 0;
+	private Integer idMateria = 0;
 	private Integer codigo;
 	private String nombre;
 	private ArrayList <Integer> correlativas;
 	private Integer cantMaximaDeCorrelativas;
 
 	public Materia(Integer codigo, String nombre) {
-		this.id++;
+		this.idMateria++;
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.correlativas = new ArrayList<>();
 		this.cantMaximaDeCorrelativas = 5; // me base en el plan de estudios de desarrollo web,
-	}                                     // la materia con mas correlativas, tiene 5 correlativas
-
-	public Integer getId() {
-		return id;
+                                           // la materia con mas correlativas, tiene 5 correlativas
+		Materia.contadorIdIncrementadoMateria++;
+		this.idMateria = contadorIdIncrementadoMateria;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public Integer getIdMateria() {
+		return idMateria;
 	}
-
+	
 	public Integer getCodigo() {
 		return codigo;
 	}

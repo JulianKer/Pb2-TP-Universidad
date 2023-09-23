@@ -6,17 +6,12 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
-public class TestComision {
+public class TestCiclo {
 
 	@Test
-	public void queSeCreeUnaComsion() {
-		String name = "unlam";
+	public void queSeRegistreUnCiclo() {
+		String name = "Unlam";
 		Universidad unlam = new Universidad(name);
-		
-		Integer codigo = 910;
-		String nombre = "Pb2";
-		
-		Materia nuevaMateria = new Materia(codigo, nombre);
 		
 		LocalDate fechaInicioCiclo = LocalDate.of(2023, 04, 05);
 		LocalDate fechaFinCiclo = LocalDate.of(2023, 07, 05);
@@ -25,14 +20,7 @@ public class TestComision {
 		
 		CicloLectivo nuevoCiclo = new CicloLectivo(fechaInicioCiclo, fechaFinCiclo, fechaInicioInscripcion, fechaFinInscripcion);
 		
-		Integer numeroAula = 406;
-		Integer cantidadDeAlumnos = 30;
-		Aula nuevaAula = new Aula(numeroAula, cantidadDeAlumnos);
-		
-		Integer idComision = 1300;
-		Comision nuevaComision = new Comision(idComision, nuevaMateria, nuevoCiclo, Turno.MANANA, nuevaAula, Dias.LUN_Y_JUE);
-		
-		assertNotNull(nuevaComision);
+		assertTrue(unlam.registrarCicloLectivo(nuevoCiclo));
 	}
 
 }

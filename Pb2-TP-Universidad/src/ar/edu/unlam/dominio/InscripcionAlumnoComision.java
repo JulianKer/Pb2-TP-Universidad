@@ -218,4 +218,26 @@ public class InscripcionAlumnoComision {
 
 		return notaFinal;
 	}
+
+	@Override
+	public String toString() {
+		String mensaje = this.alumno.getDni() + " " + this.alumno.getApellido() + " " + this.alumno.getNombre() 
+		+ " | Materia: " + this.comision.getMateria().getNombre() + " | Nota: " + calcularNotaFinal()
+		+ " | " + this.comision.getCiclo().getFechaFinCiclo().getYear();
+		
+		if (this.comision.getCiclo().getFechaInicioCiclo().getMonthValue() > 3 && this.comision.getCiclo().getFechaFinCiclo().getMonthValue() < 8) { // si el fin es de
+			// Julio para abajo, te devuelvo este mensaje
+			mensaje += " 1C";
+			
+		} else if (this.comision.getCiclo().getFechaInicioCiclo().getMonthValue() > 7 && this.comision.getCiclo().getFechaFinCiclo().getMonthValue() < 12) {
+			mensaje += " 2C";
+			
+		}else {
+			mensaje += " 3C";
+		}
+		
+		return mensaje;
+	}
+	
+	
 }

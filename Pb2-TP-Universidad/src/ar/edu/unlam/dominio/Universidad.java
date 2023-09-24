@@ -523,28 +523,24 @@ public class Universidad {
 		return yaEsDocenteEnOtra;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public ArrayList<InscripcionAlumnoComision> obtenerListadoDeMateriasAprobadas(Integer dni) {
+		Alumno encontrado = buscarAlumnoPorDni(dni);
+		
+		if (encontrado == null) { // --> directamente si el alumno no existe
+			return null;    // te retorno null pq no va a encontrar nada
+		}
+		
+		ArrayList <InscripcionAlumnoComision> listaAprobadas = new ArrayList<>();
+		
+		for (int i = 0; i < this.inscripcionesAlumnoComison.size(); i++) {
+			if (this.inscripcionesAlumnoComison.get(i).getAlumno().getDni().equals(dni)
+					&& this.inscripcionesAlumnoComison.get(i).calcularNotaFinal() >= 7) {
+				listaAprobadas.add(this.inscripcionesAlumnoComison.get(i));
+			}
+		}
+		
+		return listaAprobadas;
+	}
 
 	public ArrayList<Materia> obtenerMateriasQueFaltanCursarParaUnAlumno(Integer dniAlumno) {
 		Alumno encontrado = buscarAlumnoPorDni(dniAlumno);
@@ -578,7 +574,7 @@ public class Universidad {
 		
 		// creacion de TODAS las materias de Desarrollo Web
 		
-		String nombre1 = "Pb1";
+		String nombre1 = "Programacion Basica 1";
 		Integer codigo1 = 2619;
 		Materia nueva1 = new Materia(codigo1, nombre1);
 		this.registraMateria(nueva1);
@@ -598,13 +594,13 @@ public class Universidad {
 		Materia nueva4 = new Materia(codigo4, nombre4);
 		this.registraMateria(nueva4);
 		
-		String nombre5 = "Pb2";
+		String nombre5 = "Programacion Basica 2";
 		Integer codigo5 = 2623;
 		Materia nueva5 = new Materia(codigo5, nombre5);
 		this.agregarCorrelativaAUnaMateria(codigo5, codigo1);
 		this.registraMateria(nueva5);
 		
-		String nombre6 = "Pw1";
+		String nombre6 = "Programacion Web 1";
 		Integer codigo6 = 2624;
 		Materia nueva6 = new Materia(codigo6, nombre6);
 		this.agregarCorrelativaAUnaMateria(codigo6, codigo1);
@@ -619,7 +615,7 @@ public class Universidad {
 		this.agregarCorrelativaAUnaMateria(codigo7, codigo3);
 		this.registraMateria(nueva7);
 		
-		String nombre8 = "Introduccion al diseño grafico";
+		String nombre8 = "Introduccion al disenio grafico";
 		Integer codigo8 = 2626;
 		Materia nueva8 = new Materia(codigo8, nombre8);
 		this.agregarCorrelativaAUnaMateria(codigo8, codigo2);
@@ -631,7 +627,7 @@ public class Universidad {
 		this.agregarCorrelativaAUnaMateria(codigo9, codigo4);
 		this.registraMateria(nueva9);
 		
-		String nombre10 = "Pw2";
+		String nombre10 = "Programacion Web 2";
 		Integer codigo10 = 2628;
 		Materia nueva10 = new Materia(codigo10, nombre10);
 		this.agregarCorrelativaAUnaMateria(codigo10, codigo5);
@@ -639,7 +635,7 @@ public class Universidad {
 		this.agregarCorrelativaAUnaMateria(codigo10, codigo7);
 		this.registraMateria(nueva10);
 		
-		String nombre11 = "Diseño de aplicaciones Web";
+		String nombre11 = "Disenio de aplicaciones Web";
 		Integer codigo11 = 2629;
 		Materia nueva11 = new Materia(codigo11, nombre11);
 		this.agregarCorrelativaAUnaMateria(codigo11, codigo5);
@@ -714,5 +710,4 @@ public class Universidad {
 		this.agregarCorrelativaAUnaMateria(codigo20, codigo18);
 		this.registraMateria(nueva20);
 	}
-
 }

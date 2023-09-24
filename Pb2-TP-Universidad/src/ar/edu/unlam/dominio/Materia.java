@@ -79,6 +79,12 @@ public class Materia {
 		}
 		return seElimino;
 	}
+
+	@Override
+	public String toString() {
+		return this.nombre;
+	}
 	
 
+	
 }

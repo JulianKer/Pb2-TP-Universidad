@@ -82,8 +82,8 @@ public class InscripcionAlumnoComision {
 							&& (primerParcial.getValor() < 7 && segundoParcial.getValor() >= 7 
 							|| primerParcial.getValor() >= 7 && segundoParcial.getValor() < 7 
 							|| primerParcial.getValor() < 7 && segundoParcial.getValor() < 7)) {
-						calificado = nuevaNotaFinal.asignarValor(valor);
 						this.notaDelFinal = nuevaNotaFinal;
+						calificado = nuevaNotaFinal.asignarValor(valor);
 					}
 					
 				} else if (primerParcial != null && recuSegundoParcial != null) {
@@ -100,8 +100,8 @@ public class InscripcionAlumnoComision {
 							&& (segundoParcial.getValor() < 7 && recuPrimerParcial.getValor() >= 7 
 							|| segundoParcial.getValor() >= 7 && recuPrimerParcial.getValor() < 7 
 							|| segundoParcial.getValor() < 7 && recuPrimerParcial.getValor() < 7)) {
-						calificado = nuevaNotaFinal.asignarValor(valor);					
 						this.notaDelFinal = nuevaNotaFinal;
+						calificado = nuevaNotaFinal.asignarValor(valor);					
 					}
 				}
 				break;
@@ -180,12 +180,12 @@ public class InscripcionAlumnoComision {
 		Nota recuPrimerParcial = buscarNotaPorTipo(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL);
 		Nota recuSegundoParcial = buscarNotaPorTipo(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL);
 		
-		if (this.notaDelFinal != null) {
+		if (this.notaDelFinal != null) { // si tengo una nota de algun final, entro aca
 			notaFinal = this.notaDelFinal.getValor();
 		}else {
 			if (this.notas.size() >= 2) { // puedo calcalcular notaFinal si por lo menos tengo 2 notas
 				switch (this.notas.size()) {
-				case 2:
+				case 2: // si solo tengo 2 notas, entro aca (pude haber faltado a algun parcial o no haber hecho recuperatorios)
 					if (primerParcial != null && segundoParcial != null) {
 						if (primerParcial.getValor() >= 7 && segundoParcial.getValor() >= 7) {
 							notaFinal = (primerParcial.getValor() + segundoParcial.getValor()) / 2;					
@@ -202,7 +202,7 @@ public class InscripcionAlumnoComision {
 						}
 					}
 					break;
-				case 3:
+				case 3: // si tengo 3 notas, entro aca (pude haberme presentado a los parciales pero en alguno me fue mal y lo recupere)
 					if (primerParcial != null && segundoParcial != null && recuPrimerParcial != null) {
 						if (segundoParcial.getValor() >= 7 && recuPrimerParcial.getValor() >= 7 ) {
 							notaFinal = (segundoParcial.getValor() + recuPrimerParcial.getValor()) /2;						
@@ -227,16 +227,12 @@ public class InscripcionAlumnoComision {
 		+ " | Materia: " + this.comision.getMateria().getNombre() + " | Nota: " + calcularNotaFinal()
 		+ " | " + this.comision.getCiclo().getFechaFinCiclo().getYear();
 		
-		if (this.comision.getCiclo().getFechaInicioCiclo().getMonthValue() > 3 && this.comision.getCiclo().getFechaFinCiclo().getMonthValue() < 8) { // si el fin es de
-			// Julio para abajo, te devuelvo este mensaje
-			mensaje += " 1C";
-			
-		} else if (this.comision.getCiclo().getFechaInicioCiclo().getMonthValue() > 7 && this.comision.getCiclo().getFechaFinCiclo().getMonthValue() < 12) {
-			mensaje += " 2C";
-			
-		}else {
-			mensaje += " 3C";
-		}
+		if (this.comision.getCiclo().getFechaInicioCiclo().getMonthValue() > 3 && this.comision.getCiclo().getFechaFinCiclo().getMonthValue() < 8)
+			mensaje += " 1C";	// despues de 3 (Marzo) y antes de 8 (Agosto) --> 1C 
+		else if (this.comision.getCiclo().getFechaInicioCiclo().getMonthValue() > 7 && this.comision.getCiclo().getFechaFinCiclo().getMonthValue() < 12) 
+			mensaje += " 2C";  // despues de 7 (Julio) y antes de 12 (Diciembre) --> 2C
+		else 
+			mensaje += " 3C";  // despues de 11 (Noviembre) y antes de 4 (Abril) --> 3C (serian las materias de verano)
 		
 		return mensaje;
 	}

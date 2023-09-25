@@ -18,6 +18,7 @@ public class Alumno {
 		this.apellido = apellido;
 		this.fechaNacimiento = fechaNacimiento;
 		this.fechaIngreso = fechaIngreso;
+		
 		Alumno.contadorIdIncrementadoAlumno++;
 		this.idAlumno = contadorIdIncrementadoAlumno;
 	}

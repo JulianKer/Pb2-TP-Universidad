@@ -10,6 +10,7 @@ public class Aula {
 	public Aula(Integer numeroAula, Integer cantidadMaxDeAlumnos) {
 		this.numeroAula = numeroAula;
 		this.cantMaxDeAlumnos = cantidadMaxDeAlumnos;
+		
 		Aula.contadorIdIncrementadoAula++;
 		this.idAula = contadorIdIncrementadoAula;
 	}

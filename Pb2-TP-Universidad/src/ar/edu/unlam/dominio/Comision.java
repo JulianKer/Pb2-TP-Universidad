@@ -18,6 +18,7 @@ public class Comision {
 		this.turno = turno;
 		this.aula = aula;
 		this.dias = dias;
+		
 		Comision.contadorIdIncrementadoCiclo++;
 		this.idIncrementadoDeLaComision = contadorIdIncrementadoCiclo;
 	}

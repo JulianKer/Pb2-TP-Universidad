@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 public class TestUniversidad {
-
+		
 	@Test
 	public void queSeCreeLaUniversidad() {
 		String name = "Unlam";
@@ -257,6 +257,104 @@ public class TestUniversidad {
 		Comision nuevaComision = new Comision(codigoComision, nuevaMateria, nuevoCiclo, Turno.MANANA, nuevaAula, Dias.LUN_Y_JUE);
 		
 		assertTrue(unlam.registrarComision(nuevaComision));
+	}
+	
+	@Test
+	public void queSeRegistreUnCiclo() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		LocalDate fechaInicioCiclo = LocalDate.of(2023, 04, 05);
+		LocalDate fechaFinCiclo = LocalDate.of(2023, 07, 05);
+		LocalDate fechaInicioInscripcion = LocalDate.of(2023, 03, 01);
+		LocalDate fechaFinInscripcion = LocalDate.of(2023, 03, 10);
+		CicloLectivo nuevoCiclo = new CicloLectivo(fechaInicioCiclo, fechaFinCiclo, fechaInicioInscripcion, fechaFinInscripcion);
+		
+		assertTrue(unlam.registrarCicloLectivo(nuevoCiclo));
+	}
+	
+	@Test
+	public void queNoSeRegistreUnMismoCiclo() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		LocalDate fechaInicioCiclo = LocalDate.of(2023, 04, 05);
+		LocalDate fechaFinCiclo = LocalDate.of(2023, 07, 05);
+		LocalDate fechaInicioInscripcion = LocalDate.of(2023, 03, 01);
+		LocalDate fechaFinInscripcion = LocalDate.of(2023, 03, 10);
+		CicloLectivo nuevoCiclo = new CicloLectivo(fechaInicioCiclo, fechaFinCiclo, fechaInicioInscripcion, fechaFinInscripcion);
+		
+		assertTrue(unlam.registrarCicloLectivo(nuevoCiclo));
+		assertFalse(unlam.registrarCicloLectivo(nuevoCiclo));
+	}
+	
+	@Test
+	public void queSeRegistren2CiclosSinFechasSuperpuestas() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		//creo un ciclo de 1er cuatri
+		LocalDate fechaInicioCiclo1 = LocalDate.of(2023, 04, 05);
+		LocalDate fechaFinCiclo1 = LocalDate.of(2023, 07, 05);
+		LocalDate fechaInicioInscripcion1 = LocalDate.of(2023, 03, 01);
+		LocalDate fechaFinInscripcion1 = LocalDate.of(2023, 03, 10);
+		CicloLectivo nuevoCiclo1 = new CicloLectivo(fechaInicioCiclo1, fechaFinCiclo1, fechaInicioInscripcion1, fechaFinInscripcion1);
+		
+		// creo un ciclo 2do cuatri
+		LocalDate fechaInicioCiclo2 = LocalDate.of(2023, 8, 05);
+		LocalDate fechaFinCiclo2 = LocalDate.of(2023, 11, 05);
+		LocalDate fechaInicioInscripcion2 = LocalDate.of(2023, 07, 20);
+		LocalDate fechaFinInscripcion2 = LocalDate.of(2023, 07, 28);
+		CicloLectivo nuevoCiclo2 = new CicloLectivo(fechaInicioCiclo2, fechaFinCiclo2, fechaInicioInscripcion2, fechaFinInscripcion2);
+		
+		assertTrue(unlam.registrarCicloLectivo(nuevoCiclo1));
+		assertTrue(unlam.registrarCicloLectivo(nuevoCiclo2));
+	}
+	
+	@Test
+	public void queNoSeRegistren2CiclosPorQueTienenFechasSuperpuestas() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		//creo un ciclo de 1er cuatri
+		LocalDate fechaInicioCiclo1 = LocalDate.of(2023, 04, 05);
+		LocalDate fechaFinCiclo1 = LocalDate.of(2023, 07, 05);
+		LocalDate fechaInicioInscripcion1 = LocalDate.of(2023, 03, 01);
+		LocalDate fechaFinInscripcion1 = LocalDate.of(2023, 03, 10);
+		CicloLectivo nuevoCiclo1 = new CicloLectivo(fechaInicioCiclo1, fechaFinCiclo1, fechaInicioInscripcion1, fechaFinInscripcion1);
+		
+		// creo un ciclo 2do cuatri
+		LocalDate fechaInicioCiclo2 = LocalDate.of(2023, 6, 05);
+		LocalDate fechaFinCiclo2 = LocalDate.of(2023, 11, 05);
+		LocalDate fechaInicioInscripcion2 = LocalDate.of(2023, 6, 01);
+		LocalDate fechaFinInscripcion2 = LocalDate.of(2023, 6, 04);
+		CicloLectivo nuevoCiclo2 = new CicloLectivo(fechaInicioCiclo2, fechaFinCiclo2, fechaInicioInscripcion2, fechaFinInscripcion2);
+		
+		assertTrue(unlam.registrarCicloLectivo(nuevoCiclo1));
+		assertFalse(unlam.registrarCicloLectivo(nuevoCiclo2));
+	}
+	
+	@Test
+	public void queSeRegistren2CiclosConFechasIgualesOSuperpuestasPeroQueTienenDistintoAño() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		//creo un ciclo de 1er cuatri
+		LocalDate fechaInicioCiclo1 = LocalDate.of(2023, 04, 05);
+		LocalDate fechaFinCiclo1 = LocalDate.of(2023, 07, 05);
+		LocalDate fechaInicioInscripcion1 = LocalDate.of(2023, 03, 01);
+		LocalDate fechaFinInscripcion1 = LocalDate.of(2023, 03, 10);
+		CicloLectivo nuevoCiclo1 = new CicloLectivo(fechaInicioCiclo1, fechaFinCiclo1, fechaInicioInscripcion1, fechaFinInscripcion1);
+		
+		// creo un ciclo 2do cuatri
+		LocalDate fechaInicioCiclo2 = LocalDate.of(2024, 04, 05);
+		LocalDate fechaFinCiclo2 = LocalDate.of(2024, 07, 05);
+		LocalDate fechaInicioInscripcion2 = LocalDate.of(2024, 6, 01);
+		LocalDate fechaFinInscripcion2 = LocalDate.of(2024, 6, 04);
+		CicloLectivo nuevoCiclo2 = new CicloLectivo(fechaInicioCiclo2, fechaFinCiclo2, fechaInicioInscripcion2, fechaFinInscripcion2);
+		
+		assertTrue(unlam.registrarCicloLectivo(nuevoCiclo1));
+		assertTrue(unlam.registrarCicloLectivo(nuevoCiclo2));
 	}
 	
 	@Test
@@ -1592,8 +1690,7 @@ public class TestUniversidad {
 		}
 		
 	}
-	
-	
+
 	@Test
 	public void pruebaDeDevolverLasMateriasAprobadasYMostrarlasConElToString() {
 		String name = "Unlam";
@@ -1700,7 +1797,7 @@ public class TestUniversidad {
 		unlam.inscribirAlumnoAComision(dni, idComision3, fechaInscripcionDelAlumno3);
 		
 		
-		// evaluo las 3 materias con 7 tanto en 1er y 2do parcial en todas
+		// evaluo las 3 materias
 		Integer valorNota7 = 7;
 		Integer valorNota8 = 8;
 		Integer valorNota9 = 9;
@@ -1869,5 +1966,106 @@ public class TestUniversidad {
 			System.out.println(inscripcionConMateriaAprobada.toString() + "\n");
 		}
 		System.out.println("------------------------------------------------------------------------------------------");
+	}
+	
+	@Test
+	public void queObtengaPromedioPorDniDelAlumno() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		// este metodo lo podria dejar en el constructor de universidad (como lo deje comentado)
+		// pero lo pongo aca para q en los anterioires test, me deje crear esas materias que cree,
+		// pq sino me saltaba error porque para registrar materia le puse un limite de 20 (que es 
+		// la cantidad que hay en desarrollo web)
+		unlam.crearYRegistrarMateriasDeDesarrolloWeb();
+		
+		//creo alumno:
+		Integer dni = 46091742;
+		String nombreA = "Julian", apellido = "Ker";
+		LocalDate fechaNacimiento = LocalDate.of(2004, 10, 13);
+		LocalDate fechaIngreso = LocalDate.of(2023, 4, 07);
+		
+		Alumno nuevoAlumno = new Alumno(dni, nombreA, apellido, fechaNacimiento, fechaIngreso);
+		unlam.registrarAlumno(nuevoAlumno);
+		
+		//creo un ciclo
+		LocalDate fechaInicioCiclo = LocalDate.of(2023, 04, 05);
+		LocalDate fechaFinCiclo = LocalDate.of(2023, 07, 05);
+		LocalDate fechaInicioInscripcion = LocalDate.of(2023, 03, 01);
+		LocalDate fechaFinInscripcion = LocalDate.of(2023, 03, 10);
+		
+		CicloLectivo nuevoCiclo = new CicloLectivo(fechaInicioCiclo, fechaFinCiclo, fechaInicioInscripcion, fechaFinInscripcion);
+		unlam.registrarCicloLectivo(nuevoCiclo);
+		
+		//creo un aula
+		Integer cantidadDeAlumnos = 30;
+		
+		Integer numeroAula1 = 400;
+		Aula nuevaAula1 = new Aula(numeroAula1, cantidadDeAlumnos);
+		unlam.registrarAula(nuevaAula1);
+		
+		Integer numeroAula2 = 410;
+		Aula nuevaAula2 = new Aula(numeroAula2, cantidadDeAlumnos);
+		unlam.registrarAula(nuevaAula2);
+		
+		Integer numeroAula3 = 420;
+		Aula nuevaAula3 = new Aula(numeroAula3, cantidadDeAlumnos);
+		unlam.registrarAula(nuevaAula3);
+		
+		// busco las materias que quiero agregar a las comisiones
+		Materia pb1 = unlam.buscarMateriaPorCodigo(2619);
+		Materia informaticaGeneral = unlam.buscarMateriaPorCodigo(2620);
+		Materia matematicaGeneral = unlam.buscarMateriaPorCodigo(2621);
+		
+		
+		// creo las comisiones
+		Integer idComision1 = 1000;
+		Comision nuevaComision1 = new Comision(idComision1, pb1, nuevoCiclo, Turno.MANANA, nuevaAula1, Dias.LUN_Y_JUE);
+		unlam.registrarComision(nuevaComision1);
+		
+		Integer idComision2 = 1100;
+		Comision nuevaComision2 = new Comision(idComision2, informaticaGeneral, nuevoCiclo, Turno.MANANA, nuevaAula2, Dias.MAR_Y_VIE);
+		unlam.registrarComision(nuevaComision2);
+		
+		Integer idComision3 = 1200;
+		Comision nuevaComision3 = new Comision(idComision3, matematicaGeneral, nuevoCiclo, Turno.MANANA, nuevaAula3, Dias.MIE_Y_SAB);
+		unlam.registrarComision(nuevaComision3);
+		
+		
+		// elijo la fecha en la que se está inscribiendo el alumno
+		Integer dia= 5;
+		Integer mes = 03;
+		Integer año = 2023;
+		
+		LocalDate fechaInscripcionDelAlumno = LocalDate.of(año, mes, dia);
+		
+		// inscribo al alumno en cada materia
+		unlam.inscribirAlumnoAComision(dni, idComision1, fechaInscripcionDelAlumno);
+		unlam.inscribirAlumnoAComision(dni, idComision2, fechaInscripcionDelAlumno);
+		unlam.inscribirAlumnoAComision(dni, idComision3, fechaInscripcionDelAlumno);
+		
+		
+		// evaluo las 3 materias
+		Integer valorNota8 = 8;
+		Integer valorNota9 = 9;
+		
+		unlam.evaluar(dni, 2619, TipoDeNota.PRIMER_PARCIAL, valorNota8);
+		unlam.evaluar(dni, 2619, TipoDeNota.SEGUNDO_PARCIAL, valorNota8);
+		
+		unlam.evaluar(dni, 2620, TipoDeNota.PRIMER_PARCIAL, valorNota8);
+		unlam.evaluar(dni, 2620, TipoDeNota.SEGUNDO_PARCIAL, valorNota8);
+		
+		unlam.evaluar(dni, 2621, TipoDeNota.PRIMER_PARCIAL, valorNota9);
+		unlam.evaluar(dni, 2621, TipoDeNota.SEGUNDO_PARCIAL, valorNota9);
+		
+		Double valorEsperado, valorObtenido;
+		
+		valorObtenido = unlam.obtenerPromedio(dni);
+		valorEsperado = 8.333;
+		
+		System.out.println("\nEl promedio, hasta ahora, del alumno de DNI: " + dni + " es: " + valorObtenido);
+		
+		assertEquals(valorEsperado, valorObtenido, 0.001); 
+		              // aca le digo con un delta q, con una diferencia de 0.001, se consideran iguales
 	}
 }

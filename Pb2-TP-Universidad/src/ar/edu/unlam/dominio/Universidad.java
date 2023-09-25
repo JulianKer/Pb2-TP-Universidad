@@ -368,7 +368,6 @@ public class Universidad {
 		
 		return seEvaluo;
 		}
-	
 
 	public Boolean saberSiElAlumnoTieneLasCorrelativasDeUnaMateriaConMasDe7(Integer dni, Materia materia) {
 		Boolean lasTieneConMasDe7 = false;
@@ -516,6 +515,22 @@ public class Universidad {
 			}
 		}
 		return yaEsDocenteEnOtra;
+	}
+	
+	public Double obtenerPromedio(Integer dni) {
+		Double promedio = 0.0;
+		Double sumatoria = 0.0;
+		Double cantNotas = 0.0;
+		
+		for (InscripcionAlumnoComision inscriAlumCom: this.inscripcionesAlumnoComison) {
+			if (inscriAlumCom.getAlumno().getDni().equals(dni) && inscriAlumCom.calcularNotaFinal() >= 4) {
+				sumatoria += inscriAlumCom.calcularNotaFinal();
+				cantNotas++;				
+			}
+		}
+		
+		promedio = sumatoria/cantNotas;
+		return promedio;
 	}
 	
 	public ArrayList<InscripcionAlumnoComision> obtenerListadoDeMateriasAprobadas(Integer dni) {

@@ -36,36 +36,23 @@ public class InscripcionAlumnoComision {
 		if (this.notas.size() < 3 && encontrada == null && !tipoDeNota.equals(TipoDeNota.FINAL) && this.notaDelFinal == null) {
 			
 			// Estos son los distintos casos para poder calificar una nota DISTINTA de final. (primero pregunto si existen esas bitas o no)
-			if (tipoDeNota.equals(TipoDeNota.PRIMER_PARCIAL) || tipoDeNota.equals(TipoDeNota.SEGUNDO_PARCIAL)  /* ----> si es 1er o 2do parcal, calificalo de una*/
+			if (tipoDeNota.equals(TipoDeNota.PRIMER_PARCIAL) && this.notas.size() == 0 
+					|| tipoDeNota.equals(TipoDeNota.SEGUNDO_PARCIAL) && this.notas.size() == 0 
+					|| tipoDeNota.equals(TipoDeNota.SEGUNDO_PARCIAL) && this.notas.size() == 1 && this.notas.get(0).getTipoDeNota().equals(TipoDeNota.PRIMER_PARCIAL)
 					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial != null && segundoParcial != null && recuPrimerParcial == null && recuSegundoParcial == null
 					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial == null && segundoParcial != null && recuPrimerParcial == null && recuSegundoParcial == null
 					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial != null && segundoParcial != null && recuPrimerParcial == null && recuSegundoParcial == null
 					|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial != null && segundoParcial == null && recuPrimerParcial == null && recuSegundoParcial == null
 					) { 
-				/* 1-	Puedo calificar Recu1 si tengo p1 con -7 y p2 con +=7          \
-				 * 2-	Puedo calificar Recu1 si tengo p1 con -4 y p2 con  +=4 y -7     |
-				 * 3-	Puedo calificar Recu1 si tengo p1 con A y p2 con +=7            |       -p1 --> primerParcial
-				 * 4-	Puedo calificar Recu1 si tengo p1 con A y p2 con +=4 y -7       |---->  -p2 --> segundoParcial
-				 * 																		|       -Recu1 --> recuperatorioPrimerParcial
-				 * 																		|       -Recu2 --> recuperatorioSegundoParcial
-				 * 1-	Puedo calificar Recu2 si tengo p1 con += 7 y p2 con -7          |       - A ---> Ausente
-				 * 2-	Puedo calificar Recu2 si tengo p1 con +=4 y -7 y p2 con -4      |
-				 * 3-	Puedo calificar Recu2 si tengo p1 con +=7 y p2 con A            |
-				 * 4-	Puedo calificar Recu2 si tengo p1 con +=4 y -7 y p2 con A      /        */
-				
 				
 				// y aca, si ya paso el anterior if, es pq existen o no esas notas, entonces las q existen, les pregunto su valor.
 				
 				if (tipoDeNota.equals(TipoDeNota.PRIMER_PARCIAL) || tipoDeNota.equals(TipoDeNota.SEGUNDO_PARCIAL)
-						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial == null && segundoParcial.getValor() >= 7
-						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial == null && segundoParcial.getValor() >= 4 && segundoParcial.getValor() < 7
-						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >= 7 && segundoParcial == null
-						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >=4 && primerParcial.getValor() < 7 && segundoParcial == null
-						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial.getValor() < 7 && segundoParcial.getValor() >= 7
-						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial.getValor() < 4 && segundoParcial.getValor() >= 4 && segundoParcial.getValor() < 7
-						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >= 7 && segundoParcial.getValor() < 7
-						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >= 4 && primerParcial.getValor() < 7 && segundoParcial.getValor() < 4) {
-					
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial == null && segundoParcial.getValor() >= 4
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL) && primerParcial.getValor() < 7 && segundoParcial.getValor() >= 4
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >= 4 && segundoParcial == null
+						|| tipoDeNota.equals(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) && primerParcial.getValor() >= 4 && segundoParcial.getValor() < 7) {
+						
 					Nota nuevaNota = new Nota(tipoDeNota);
 					asignado = nuevaNota.asignarValor(valor);
 					if (asignado) {
@@ -73,12 +60,13 @@ public class InscripcionAlumnoComision {
 					}
 				}
 			}
-		} else { // si el tipo es FINAL, entro a este else donde se verifican las distintas opciones para poder calificar un final
-			
-			Nota nuevaNotaFinal = new Nota(tipoDeNota);
-			seCalifico = calificarUnFinal(valor, primerParcial, segundoParcial, recuPrimerParcial, recuSegundoParcial, nuevaNotaFinal);
+		} else if(TipoDeNota.FINAL.equals(tipoDeNota)){ // si el tipo es FINAL, entro a este else donde se verifican las distintas opciones para poder calificar un final
+			if (this.notaDelFinal == null || this.notaDelFinal != null && this.notaDelFinal.getValor() < 4) {
+				Nota nuevaNotaFinal = new Nota(tipoDeNota);
+				seCalifico = calificarUnFinal(valor, primerParcial, segundoParcial, recuPrimerParcial, recuSegundoParcial, nuevaNotaFinal);				
+			}
 		}
-		
+		 
 		return seCalifico;
 	}
 
@@ -90,30 +78,44 @@ public class InscripcionAlumnoComision {
 			switch (this.notas.size()) {
 			case 2:
 				if (primerParcial != null && segundoParcial != null) {
-					if (primerParcial.getValor() >= 7 && segundoParcial.getValor() < 7 || primerParcial.getValor() < 7 && segundoParcial.getValor() >= 7) {
-						calificado = nuevaNotaFinal.asignarValor(valor);					
+					if (primerParcial.getValor() >= 4 && segundoParcial.getValor() >= 4 
+							&& (primerParcial.getValor() < 7 && segundoParcial.getValor() >= 7 
+							|| primerParcial.getValor() >= 7 && segundoParcial.getValor() < 7 
+							|| primerParcial.getValor() < 7 && segundoParcial.getValor() < 7)) {
+						calificado = nuevaNotaFinal.asignarValor(valor);
+						this.notaDelFinal = nuevaNotaFinal;
 					}
 					
 				} else if (primerParcial != null && recuSegundoParcial != null) {
-					if (primerParcial.getValor() >= 7 && recuSegundoParcial.getValor() < 7 || primerParcial.getValor() < 7 && recuSegundoParcial.getValor() >= 7 ) {
+					if (primerParcial.getValor() >= 4 && recuSegundoParcial.getValor() >= 4 
+							&& (primerParcial.getValor() < 7 && recuSegundoParcial.getValor() >= 7 
+							|| primerParcial.getValor() >= 7 && recuSegundoParcial.getValor() < 7 
+							|| primerParcial.getValor() < 7 && recuSegundoParcial.getValor() < 7)) {
 						calificado = nuevaNotaFinal.asignarValor(valor);					
+						this.notaDelFinal = nuevaNotaFinal;
 					}
 					
 				} else if (segundoParcial != null && recuPrimerParcial != null) {
-					if (segundoParcial.getValor() >= 7 && recuPrimerParcial.getValor() < 7 || segundoParcial.getValor() < 7 && recuPrimerParcial.getValor() >= 7 ) {
+					if (segundoParcial.getValor() >= 4 && recuPrimerParcial.getValor() >= 4 
+							&& (segundoParcial.getValor() < 7 && recuPrimerParcial.getValor() >= 7 
+							|| segundoParcial.getValor() >= 7 && recuPrimerParcial.getValor() < 7 
+							|| segundoParcial.getValor() < 7 && recuPrimerParcial.getValor() < 7)) {
 						calificado = nuevaNotaFinal.asignarValor(valor);					
+						this.notaDelFinal = nuevaNotaFinal;
 					}
 				}
 				break;
 			case 3:
 				if (primerParcial != null && segundoParcial != null && recuPrimerParcial != null) {
-					if (segundoParcial.getValor() >= 7 && recuPrimerParcial.getValor() < 7 || segundoParcial.getValor() < 7 && recuPrimerParcial.getValor() >= 7 ) {
+					if (primerParcial.getValor() < 4 && segundoParcial.getValor() >= 4 && recuPrimerParcial.getValor() >= 4) {
 						calificado = nuevaNotaFinal.asignarValor(valor);					
+						this.notaDelFinal = nuevaNotaFinal;
 					}
 					
 				} else if (primerParcial != null && segundoParcial != null && recuSegundoParcial != null) {
-					if (primerParcial.getValor() >= 7 && recuSegundoParcial.getValor() < 7 || primerParcial.getValor() < 7 && recuSegundoParcial.getValor() >= 7 ) {
+					if (primerParcial.getValor() >= 4 && recuSegundoParcial.getValor() < 4 && recuSegundoParcial.getValor() >= 4) {
 						calificado = nuevaNotaFinal.asignarValor(valor);					
+						this.notaDelFinal = nuevaNotaFinal;
 					}
 				}
 				break;

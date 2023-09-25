@@ -19,9 +19,7 @@ public class Universidad {
 		this.nombre = nombre;
 		this.alumnos = new ArrayList<>();
 		this.profesores = new ArrayList<>();
-		this.materias = new ArrayList<>();
-//		this.crearYRegistrarMateriasDeDesarrolloWeb();
-		
+		this.materias = new ArrayList<>();		
 		this.ciclos = new ArrayList<>();
 		this.aulas = new ArrayList<>();
 		this.comisiones = new ArrayList<>();
@@ -201,37 +199,33 @@ public class Universidad {
 		// como pueden haber varias comisiones de mismo codigo, busco la q tenga ese codigo 
         // y ademas que tenga esa fecha de inscripcion, asi se especificamente cual comision es
 		Comision comAInscibir = buscarComisionPorIdYFechQueSeInscribe(idComision, fechaQueSeInscribe); 
-		
 		InscripcionAlumnoComision nuevaInsAlumnoComision = null;
 		
 		if (comAInscibir != null) { 
 			nuevaInsAlumnoComision = buscarInscripcionPorDniAlumnoYMateria(dni, comAInscibir.getMateria());
 		}
+		
+		if (alumAInscribir == null || comAInscibir == null) 
+			return false;
 
-		// verifico que exista el alumno, comision y NO la haya cursado o si la curso, que la haya desaprobado, osea la estaria recursando
-		if (alumAInscribir != null && comAInscibir != null && (nuevaInsAlumnoComision == null || nuevaInsAlumnoComision != null && nuevaInsAlumnoComision.calcularNotaFinal() < 4)) { 
-			
-			if (saberSiElAlumnoTieneLasCorrelativasDeUnaMateriaConPorLoMenosMasDe4(alumAInscribir,
-					comAInscibir.getMateria())) { //         ---->  verifico si tiene las correlativas con + de 4
-				
-				if (!fechaQueSeInscribe.isBefore(comAInscibir.getCiclo().getFechaInicioInscripcion()) // ----> verifico que se
-						&& !fechaQueSeInscribe.isAfter(comAInscibir.getCiclo().getFechaFinInscripcion())) { // encuentre dentro de
-					                                                                                        // la fecha de inscripcion
-					
-					if (saberSiHayEspacioEnElAula(comAInscibir.getAula())) {// --> verifico si hay espacio en el aula
-						
-						if (!saberSiEstaInscriptoEnOtraComisionEnElMismoTurnoDiaYCiclo(alumAInscribir, comAInscibir)) { //--> verifico que NO 
-							//esté inscripto en una comision de mismo dia, turno y cicloLectivo.
-							
-							
-							// lo separe en varios if para organizarlo
-							nuevaInsAlumnoComision = new InscripcionAlumnoComision(alumAInscribir, comAInscibir);
-							seInsrcibio = this.inscripcionesAlumnoComison.add(nuevaInsAlumnoComision);
-						}
-					}
-				}
-			}
-		}
+		if (nuevaInsAlumnoComision != null && nuevaInsAlumnoComision.calcularNotaFinal() >= 4) 
+			return false;
+
+		if (!saberSiElAlumnoTieneLasCorrelativasDeUnaMateriaConPorLoMenosMasDe4(alumAInscribir,comAInscibir.getMateria())) 
+			return false;
+		
+		if (fechaQueSeInscribe.isBefore(comAInscibir.getCiclo().getFechaInicioInscripcion()) && !fechaQueSeInscribe.isAfter(comAInscibir.getCiclo().getFechaFinInscripcion())) 
+			return false;
+		
+		if (!saberSiHayEspacioEnElAula(comAInscibir.getAula())) 
+			return false;
+		
+		if (saberSiEstaInscriptoEnOtraComisionEnElMismoTurnoDiaYCiclo(alumAInscribir, comAInscibir)) 
+			return false;
+		
+		nuevaInsAlumnoComision = new InscripcionAlumnoComision(alumAInscribir, comAInscibir);
+		seInsrcibio = this.inscripcionesAlumnoComison.add(nuevaInsAlumnoComision);
+		
 		return seInsrcibio;
 	}
 
@@ -350,27 +344,28 @@ public class Universidad {
 		Materia materiaEncontrada = buscarMateriaPorCodigo(codigoMateria);
 		Comision comisionEncontradaPorLaMateria;
 		InscripcionAlumnoComision inscripcionEncontradaPorAlumnoYComision;
-
-		if (alumnoEncontrado != null && materiaEncontrada != null) {
-			comisionEncontradaPorLaMateria = buscarComisionPorCodigoMateria(codigoMateria);
-
-			if (comisionEncontradaPorLaMateria != null) {
-				inscripcionEncontradaPorAlumnoYComision = buscarInscripcionPorDniAlumnoYIdComision(dni,
-						comisionEncontradaPorLaMateria.getIdComision());
-
-				if (inscripcionEncontradaPorAlumnoYComision != null) {
-					
-					if (valorNota >= 7) {
-						if (saberSiElAlumnoTieneLasCorrelativasDeUnaMateriaConMasDe7(dni, materiaEncontrada)) {
-							seEvaluo = inscripcionEncontradaPorAlumnoYComision.calificar(tipoDeNota, valorNota);							
-						}
-					}else {
-						seEvaluo = inscripcionEncontradaPorAlumnoYComision.calificar(tipoDeNota, valorNota);
-					}
-					
-					}
-				}
+		
+		if (alumnoEncontrado == null || materiaEncontrada == null)
+			return false;
+		
+		comisionEncontradaPorLaMateria = buscarComisionPorCodigoMateria(codigoMateria);
+				
+		if (comisionEncontradaPorLaMateria == null) 
+			return false;
+		
+		inscripcionEncontradaPorAlumnoYComision = buscarInscripcionPorDniAlumnoYIdComision(dni, comisionEncontradaPorLaMateria.getIdComision());
+		
+		if (inscripcionEncontradaPorAlumnoYComision == null) 
+			return false;
+		
+		if (valorNota >= 7) {
+			if (saberSiElAlumnoTieneLasCorrelativasDeUnaMateriaConMasDe7(dni, materiaEncontrada)) {
+				seEvaluo = inscripcionEncontradaPorAlumnoYComision.calificar(tipoDeNota, valorNota);							
 			}
+		}else {
+			seEvaluo = inscripcionEncontradaPorAlumnoYComision.calificar(tipoDeNota, valorNota);
+		}
+		
 		return seEvaluo;
 		}
 	

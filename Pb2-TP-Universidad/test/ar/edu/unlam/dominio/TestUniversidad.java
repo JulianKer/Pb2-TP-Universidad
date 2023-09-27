@@ -2068,4 +2068,94 @@ public class TestUniversidad {
 		assertEquals(valorEsperado, valorObtenido, 0.001); 
 		              // aca le digo con un delta q, con una diferencia de 0.001, se consideran iguales
 	}
+	
+
+	@Test
+	public void quePuedaObtenerReporteDeNotasDeAlumnosDeUnaComision() {
+		String name = "Unlam";
+		Universidad unlam = new Universidad(name);
+		
+		// este metodo lo podria dejar en el constructor de universidad
+		// pero lo pongo aca para q en los anterioires test, me deje crear esas materias que cree,
+		// pq sino me saltaba error porque para registrar materia le puse un limite de 20 (que es 
+		// la cantidad que hay en desarrollo web)
+		unlam.crearYRegistrarMateriasDeDesarrolloWeb();
+		
+		//creo alumno:
+		Integer dni = 46091742;
+		String nombreA = "Julian Gabriel", apellido = "Schmuker";
+		LocalDate fechaNacimiento = LocalDate.of(2004, 10, 13);
+		LocalDate fechaIngreso = LocalDate.of(2023, 4, 07);
+		
+		Alumno nuevoAlumno = new Alumno(dni, nombreA, apellido, fechaNacimiento, fechaIngreso);
+		unlam.registrarAlumno(nuevoAlumno);
+		
+		Integer dni2 = 43000847;
+		String nombreA2 = "German", apellido2 = "Renzetti";
+		LocalDate fechaNacimiento2 = LocalDate.of(2004, 10, 13);
+		LocalDate fechaIngreso2 = LocalDate.of(2023, 4, 07);
+		
+		Alumno nuevoAlumno2 = new Alumno(dni2, nombreA2, apellido2, fechaNacimiento2, fechaIngreso2);
+		unlam.registrarAlumno(nuevoAlumno2);
+		
+		//creo un ciclo de 1er cuatri, 2do cuatri y 3er cuatri
+		LocalDate fechaInicioCiclo1 = LocalDate.of(2023, 04, 05);
+		LocalDate fechaFinCiclo1 = LocalDate.of(2023, 07, 05);
+		LocalDate fechaInicioInscripcion1 = LocalDate.of(2023, 03, 01);
+		LocalDate fechaFinInscripcion1 = LocalDate.of(2023, 03, 10);
+		
+		CicloLectivo nuevoCiclo1 = new CicloLectivo(fechaInicioCiclo1, fechaFinCiclo1, fechaInicioInscripcion1, fechaFinInscripcion1);
+		unlam.registrarCicloLectivo(nuevoCiclo1);
+		
+		//creo un aula
+		Integer cantidadDeAlumnos = 30;
+		
+		Integer numeroAula1 = 400;
+		Aula nuevaAula1 = new Aula(numeroAula1, cantidadDeAlumnos);
+		unlam.registrarAula(nuevaAula1);
+		
+		// busco las materias que quiero agregar a las comisiones
+		Materia pb1 = unlam.buscarMateriaPorCodigo(2619);
+		
+		// creo las comisiones
+		Integer idComision1 = 1000;
+		Comision nuevaComision1 = new Comision(idComision1, pb1, nuevoCiclo1, Turno.MANANA, nuevaAula1, Dias.LUN_Y_JUE);
+		unlam.registrarComision(nuevaComision1);
+		
+		// elijo la fecha en la que se está inscribiendo los alumnos al 1er cuatrimestre
+		Integer dia1 = 5;
+		Integer mes1 = 03;
+		Integer año1 = 2023;
+		LocalDate fechaInscripcionDelAlumno1 = LocalDate.of(año1, mes1, dia1);
+		
+		// inscribo al alumno en cada materia
+		unlam.inscribirAlumnoAComision(dni, idComision1, fechaInscripcionDelAlumno1);
+		unlam.inscribirAlumnoAComision(dni2, idComision1, fechaInscripcionDelAlumno1);
+		
+		// evaluo las 3 materias
+		Integer valorNota7 = 7;
+		Integer valorNota8 = 8;
+		Integer valorNota9 = 9;
+		Integer valorNota10 = 10;
+		
+		unlam.evaluar(dni, 2619, TipoDeNota.PRIMER_PARCIAL, valorNota7);
+		unlam.evaluar(dni, 2619, TipoDeNota.SEGUNDO_PARCIAL, valorNota9);
+		
+		unlam.evaluar(dni2, 2619, TipoDeNota.PRIMER_PARCIAL, valorNota7);
+		unlam.evaluar(dni2, 2619, TipoDeNota.SEGUNDO_PARCIAL, valorNota9);
+		
+		
+		Integer cantidadEsperada = 3, cantidadObtenida;
+		
+		ArrayList <String> reporteDeNotas = new ArrayList<>();
+		reporteDeNotas = unlam.obtenerReporteDeNotasDeUnaComision(idComision1);
+		
+		System.out.println("---------------------------------------------------------------------------------");
+		System.out.println("Reporte De Notas de laComision: " + idComision1 + "\n");
+		for (String reporteDeAlumno : reporteDeNotas) {
+			System.out.println(reporteDeAlumno + "\n");
+		}
+		System.out.println("---------------------------------------------------------------------------------");
+
+	}
 }

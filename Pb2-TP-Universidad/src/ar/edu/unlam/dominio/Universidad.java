@@ -720,4 +720,64 @@ public class Universidad {
 		this.agregarCorrelativaAUnaMateria(codigo20, codigo18);
 		this.registraMateria(nueva20);
 	}
+
+	public ArrayList<String> obtenerReporteDeNotasDeUnaComision(Integer idComision) {
+		ArrayList <String> reporteDeNotas = new ArrayList<>();
+		Comision encontrada = buscarComisionPorIdComision(idComision);
+		String reporte;
+		Nota notaEncontrada = null;
+		Integer notaFinal = null;
+		
+		if (encontrada != null) {
+			for (int i = 0; i < this.inscripcionesAlumnoComison.size(); i++) {
+				if (this.inscripcionesAlumnoComison.get(i).getComision().getIdComision().equals(idComision)) {
+					reporte = this.inscripcionesAlumnoComison.get(i).getAlumno().getDni() + " | " + this.inscripcionesAlumnoComison.get(i).getAlumno().getApellido() + " " + this.inscripcionesAlumnoComison.get(i).getAlumno().getNombre();
+					
+					//------------------------------- primer parcial
+					notaEncontrada = this.inscripcionesAlumnoComison.get(i).buscarNotaPorTipo(TipoDeNota.PRIMER_PARCIAL);
+					if (notaEncontrada != null) {
+						reporte += " | Parcial 1 = " + notaEncontrada.getValor();
+					}else {
+						reporte += " | Parcial 1 = Ausente";
+					}
+					//------------------------------- segundo parcial
+					notaEncontrada = this.inscripcionesAlumnoComison.get(i).buscarNotaPorTipo(TipoDeNota.SEGUNDO_PARCIAL);
+					if (notaEncontrada != null) {
+						reporte += " | Parcial 2 = " + notaEncontrada.getValor();
+						
+					}else {
+						reporte += " | Parcial 2 = Ausente";
+					}
+					//------------------------------- recu Pirmer parcial
+					notaEncontrada = this.inscripcionesAlumnoComison.get(i).buscarNotaPorTipo(TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL);
+					if (notaEncontrada != null) {
+						reporte += " | Recuperatorio Parcial 1 = " + notaEncontrada.getValor();
+					}else {
+						reporte += " | Recuperatorio Parcial 1 = Ausente";
+					}
+					//------------------------------- recu segundo parcial
+					notaEncontrada = this.inscripcionesAlumnoComison.get(i).buscarNotaPorTipo(TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL);
+					if (notaEncontrada != null) {
+						reporte += " | Recuperatorio Parcial 2 = " + notaEncontrada.getValor();
+					}else {
+						reporte += " | Recuperatorio  Parcial 2 = Ausente";
+					}
+					//-------------------------------  final
+					notaEncontrada = this.inscripcionesAlumnoComison.get(i).getNotaDelFinal();
+					if (notaEncontrada != null) {
+						reporte += " | Parcial Final = " + notaEncontrada.getValor();
+					}else {
+						reporte += " | Parcial Final = Ausente";
+					}
+					//-------------------------------  nota final
+					notaFinal = this.inscripcionesAlumnoComison.get(i).calcularNotaFinal();
+					reporte += " | Nota Final = " + notaFinal;
+					
+					reporteDeNotas.add(reporte);
+				}
+			}
+		}
+		
+		return reporteDeNotas;
+	}
 }

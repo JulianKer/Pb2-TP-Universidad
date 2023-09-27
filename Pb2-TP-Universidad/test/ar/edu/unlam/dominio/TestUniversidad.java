@@ -2134,9 +2134,7 @@ public class TestUniversidad {
 		
 		// evaluo las 3 materias
 		Integer valorNota7 = 7;
-		Integer valorNota8 = 8;
 		Integer valorNota9 = 9;
-		Integer valorNota10 = 10;
 		
 		unlam.evaluar(dni, 2619, TipoDeNota.PRIMER_PARCIAL, valorNota7);
 		unlam.evaluar(dni, 2619, TipoDeNota.SEGUNDO_PARCIAL, valorNota9);
@@ -2144,8 +2142,6 @@ public class TestUniversidad {
 		unlam.evaluar(dni2, 2619, TipoDeNota.PRIMER_PARCIAL, valorNota7);
 		unlam.evaluar(dni2, 2619, TipoDeNota.SEGUNDO_PARCIAL, valorNota9);
 		
-		
-		Integer cantidadEsperada = 3, cantidadObtenida;
 		
 		ArrayList <String> reporteDeNotas = new ArrayList<>();
 		reporteDeNotas = unlam.obtenerReporteDeNotasDeUnaComision(idComision1);
